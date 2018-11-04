@@ -1,5 +1,6 @@
 package laboflieven.learchy;
 
+import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Set;
@@ -16,6 +17,7 @@ public class WebCrawler
     }
 
     public void crawl(Set<String> pagesTodo, Set<String> visitedPages) throws IOException {
+        RobotsProcessor robotsProc = new RobotsProcessor();
         long sitesDone = 0;
         while (pagesTodo.size()>0 && sitesDone < 1000)
         {
@@ -25,6 +27,10 @@ public class WebCrawler
 
             if (!visitedPages.contains(page)) {
                 try {
+                    if (!robotsProc.isHostAllowed(new URL(page),page))
+                    {
+                        continue;
+                    }
                     PageResults results = processor.getFromUrl(new URL(page));
                     pagesTodo.addAll(results.urls);
                     creator.add(page, results.words);

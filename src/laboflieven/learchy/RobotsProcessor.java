@@ -1,40 +1,57 @@
 package laboflieven.learchy;
 
+
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RobotsProcessor
 {
-    public boolean isHostAllowed(URL host) throws IOException {
-        URL robotUrl = new URL(host.getProtocol()+host.getHost() + "/robots.txt");
-        robotUrl.getContent();
+    public boolean isHostAllowed(URL host, String candidateURL) throws IOException {
+        URL robotUrl = new URL(host.getProtocol()+ "://" + host.getHost() + "/robots.txt");
+        if (robotUrl.getContent() instanceof InputStream)
+        {
+            String robots = new String(((InputStream) robotUrl.getContent()).readAllBytes());
+            return isHostAllowed(robots, candidateURL);
+        }
         return true;
     }
 
     public boolean isHostAllowed(String robotsContent, String candidateURL) throws IOException {
         if (robotsContent == null || "".equals(robotsContent) ) return true; //If no robots.txt then anything goes.
-        boolean matches = true;
         String bestAllowRule = "";
         String bestDisallowRule = "";
+        URL url = new URL(candidateURL);
+        candidateURL = url.getPath();
         for (String keyVals : robotsContent.split("\n"))
         {
             if (keyVals.startsWith("#")) continue;//skip comments
-            if (!keyVals.contains(":")) continue; //if it isn't a key value then skip it all together.
+            if (!keyVals.contains(":")) continue; //if it isn't a key rule then skip it all together.
             String key =  keyVals.substring(0, keyVals.indexOf(":"));
-            String value =  keyVals.substring(keyVals.indexOf(":") + 1).trim();
+            String rule =  keyVals.substring(keyVals.indexOf(":") + 1).trim();
+            if (rule.endsWith("/")) rule += "*";
             if ("Disallow".equals(key)) {
-                if (candidateURL.equals(value) || candidateURL.startsWith(value) && bestDisallowRule.length() < value.length()) {
-                    bestDisallowRule = value;
+                if (candidateURL.equals(rule) || matches(rule, candidateURL) && bestDisallowRule.length() < rule.length()) {
+                    bestDisallowRule = rule;
                 };
             }
             if ("Allow".equals(key)) {
-                if (candidateURL.equals(value) || candidateURL.startsWith(value) && bestAllowRule.length() < value.length())  {
-                    bestAllowRule = value;
+                if (candidateURL.equals(rule) || matches(rule, candidateURL) && bestAllowRule.length() < rule.length())  {
+                    bestAllowRule = rule;
                 }
             }
         }
-        if (bestAllowRule.length() > bestDisallowRule.length()) return true;
+        if (bestAllowRule.length() >= bestDisallowRule.length()) return true;
         return false;
+    }
+
+    public boolean matches(final String rule, final String subject)
+    {
+        Pattern regex = Pattern.compile(rule.replaceAll("[*]", ".*"));
+        Matcher m = regex.matcher(subject);
+        return m.matches();
     }
 }
