@@ -13,10 +13,12 @@ import java.util.StringTokenizer;
 
 public class JsoupUrlProcessor implements UrlProcessor {
     private WordFilter wordFilter;
+    private final AnchorDetector anchorDetector;
 
-    public JsoupUrlProcessor(WordFilter wordFilter)
+    public JsoupUrlProcessor(WordFilter wordFilter, AnchorDetector anchorDetector)
     {
         this.wordFilter = wordFilter;
+        this.anchorDetector = anchorDetector;
     }
 
     @Override
@@ -30,7 +32,7 @@ public class JsoupUrlProcessor implements UrlProcessor {
         PageResults results = new PageResults();
         results.urls = new HashSet<>();
         Document doc = Jsoup.parse(html);
-        getAnchors(source, results, doc);
+        anchorDetector.getAnchors(source, results, doc);
         if (doc.body() == null)
             return results;//Problem with pages with frames.
         String text = doc.body().text(); // "An example link"
@@ -45,39 +47,4 @@ public class JsoupUrlProcessor implements UrlProcessor {
         return results;
     }
 
-    private void getAnchors(URL source, PageResults results, Document doc) {
-        String baseUrl = source.getProtocol()+"://"+source.getHost();
-        for (Element el : doc.getElementsByTag("a"))
-        {
-            String href = el.attr("href");
-            if(href.contains("twitter") || href.contains("github"))
-                continue;
-            if (href.contains("mailto:"))
-            {
-                continue;
-            }
-            if (href.contains("?"))
-            {
-                continue;
-            }
-            if (href.endsWith(".pdf") || href.endsWith(".docx"))
-            {
-                continue;
-            }
-
-            if (href.contains("#"))
-            {
-                continue;
-            }
-            if (href.startsWith("/"))
-            {
-                href = baseUrl + href;
-            }
-            else if (!href.startsWith("http")) {
-                href = source.toString() + "/" + href;
-            }
-            href = StringUtils.strip(href, "/");
-            results.urls.add(href);
-        }
-    }
 }

@@ -38,6 +38,7 @@ public class WebCrawler
                     sitesDone++;
                 } catch (IOException ioe)
                 {
+                    System.out.println(ioe.getMessage());
                     System.out.println("Skipped " + page);
                     //TODO warn.
                 }

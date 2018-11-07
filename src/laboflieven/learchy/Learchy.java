@@ -11,7 +11,7 @@ public class Learchy
         CSVIndexCreator indexCreator = new CSVIndexCreator(new File("c:\\tmp\\files.csv"));
         WebCrawler crawler = new WebCrawler(new JsoupUrlProcessor(new FrequentWordFilter()), indexCreator);
         Set<String> urls = new HashSet<>();
-        urls.add("https://www.reddit.com/");
+        urls.add("http://www.bimetra.be/");
         try {
             crawler.crawl(urls, new HashSet<>());
         } catch (IOException e) {
