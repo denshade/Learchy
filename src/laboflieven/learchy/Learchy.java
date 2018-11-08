@@ -9,7 +9,7 @@ public class Learchy
 {
     public static void main(String[] args) throws IOException {
         CSVIndexCreator indexCreator = new CSVIndexCreator(new File("c:\\tmp\\files.csv"));
-        WebCrawler crawler = new WebCrawler(new JsoupUrlProcessor(new FrequentWordFilter()), indexCreator);
+        WebCrawler crawler = new SequentialWebCrawler(new JsoupUrlProcessor(new FrequentWordFilter(), new NameFilterAnchorDetector()), indexCreator);
         Set<String> urls = new HashSet<>();
         urls.add("http://www.bimetra.be/");
         try {

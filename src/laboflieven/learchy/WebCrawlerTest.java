@@ -8,7 +8,7 @@ import java.util.Set;
 class WebCrawlerTest {
     @org.junit.jupiter.api.Test
     void crawl() throws MalformedURLException {
-        WebCrawler crawler = new WebCrawler(new JsoupUrlProcessor(new FrequentWordFilter()), new NullIndexCreator());
+        WebCrawler crawler = new SequentialWebCrawler(new JsoupUrlProcessor(new FrequentWordFilter()), new NullIndexCreator());
         Set<String> urls = new HashSet<>();
         urls.add("http://www.bimetra.be/");
         try {
