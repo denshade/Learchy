@@ -1,14 +1,19 @@
-package laboflieven.learchy;
+package laboflieven.learchy.webcrawler;
+
+import laboflieven.learchy.index.IndexCreator;
+import laboflieven.learchy.robots.RobotsProcessor;
+import laboflieven.learchy.urlprocessing.PageResults;
+import laboflieven.learchy.urlprocessing.UrlProcessor;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Set;
 
-public class SequentialWebCrawler implements WebCrawler {
+public class ParallelWebCrawler implements WebCrawler {
     private final UrlProcessor processor;
     private final IndexCreator creator;
 
-    public SequentialWebCrawler(final UrlProcessor processor, final IndexCreator creator)
+    public ParallelWebCrawler(final UrlProcessor processor, final IndexCreator creator)
     {
         this.processor = processor;
         this.creator = creator;
@@ -18,7 +23,7 @@ public class SequentialWebCrawler implements WebCrawler {
     public void crawl(Set<String> pagesTodo, Set<String> visitedPages) throws IOException {
         RobotsProcessor robotsProc = new RobotsProcessor();
         long sitesDone = 0;
-        while (pagesTodo.size()>0 && sitesDone < 1000)
+        while (pagesTodo.size()>0 && sitesDone < 100)
         {
             String page = pagesTodo.iterator().next();
             pagesTodo.remove(page);

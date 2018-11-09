@@ -1,5 +1,6 @@
-package laboflieven.learchy;
+package laboflieven.learchy.anchor;
 
+import laboflieven.learchy.urlprocessing.PageResults;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

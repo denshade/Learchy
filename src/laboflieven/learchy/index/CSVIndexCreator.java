@@ -1,8 +1,9 @@
-package laboflieven.learchy;
+package laboflieven.learchy.index;
+
+import laboflieven.learchy.index.IndexCreator;
 
 import java.io.*;
 import java.util.Collection;
-import java.util.List;
 
 public class CSVIndexCreator implements IndexCreator {
 

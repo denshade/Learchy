@@ -1,9 +1,9 @@
-package laboflieven.learchy;
+package laboflieven.learchy.urlprocessing;
 
-import org.apache.commons.lang3.StringUtils;
+import laboflieven.learchy.anchor.AnchorDetector;
+import laboflieven.learchy.contentfilter.WordFilter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,7 +22,7 @@ public class JsoupUrlProcessor implements UrlProcessor {
     }
 
     @Override
-    public  PageResults getFromUrl(URL source) throws IOException {
+    public PageResults getFromUrl(URL source) throws IOException {
         if (!(source.getContent() instanceof InputStream))
         {
             return new PageResults();

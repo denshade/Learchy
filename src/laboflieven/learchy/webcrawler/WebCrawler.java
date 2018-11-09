@@ -1,4 +1,4 @@
-package laboflieven.learchy;
+package laboflieven.learchy.webcrawler;
 
 import java.io.IOException;
 import java.util.Set;

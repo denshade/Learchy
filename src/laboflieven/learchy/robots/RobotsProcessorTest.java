@@ -1,9 +1,8 @@
-package laboflieven.learchy;
+package laboflieven.learchy.robots;
 
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import static org.junit.jupiter.api.Assertions.*;

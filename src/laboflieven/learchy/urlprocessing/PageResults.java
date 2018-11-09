@@ -1,4 +1,4 @@
-package laboflieven.learchy;
+package laboflieven.learchy.urlprocessing;
 
 import java.net.URL;
 import java.util.HashSet;
@@ -7,8 +7,8 @@ import java.util.Set;
 
 public class PageResults
 {
-    Set<String> words;
-    Set<String> urls;
+    public Set<String> words;
+    public Set<String> urls;
 
     public PageResults()
     {

@@ -1,4 +1,4 @@
-package laboflieven.learchy;
+package laboflieven.learchy.contentfilter;
 
 import java.util.Arrays;
 

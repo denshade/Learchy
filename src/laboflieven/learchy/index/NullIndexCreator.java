@@ -1,4 +1,6 @@
-package laboflieven.learchy;
+package laboflieven.learchy.index;
+
+import laboflieven.learchy.index.IndexCreator;
 
 import java.io.IOException;
 import java.util.Collection;
