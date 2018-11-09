@@ -24,7 +24,8 @@ public class NameFilterAnchorDetector implements AnchorDetector {
             {
                 continue;
             }
-            if (href.endsWith(".pdf") || href.endsWith(".docx"))
+            if (href.endsWith(".pdf") || href.endsWith(".docx") || href.endsWith(".png")
+                     || href.endsWith(".jpg"))
             {
                 continue;
             }
