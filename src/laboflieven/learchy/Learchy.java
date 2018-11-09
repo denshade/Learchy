@@ -8,6 +8,7 @@ import laboflieven.learchy.index.CSVIndexCreator;
 import laboflieven.learchy.index.IndexCreator;
 import laboflieven.learchy.urlprocessing.JsoupUrlProcessor;
 import laboflieven.learchy.urlprocessing.UrlProcessor;
+import laboflieven.learchy.webcrawler.ParallelWebCrawler;
 import laboflieven.learchy.webcrawler.SequentialWebCrawler;
 import laboflieven.learchy.webcrawler.WebCrawler;
 
@@ -23,7 +24,8 @@ public class Learchy
         WordFilter wordFilter = new FrequentWordFilter();
         AnchorDetector anchorDetector = new NameFilterAnchorDetector();
         UrlProcessor processor = new JsoupUrlProcessor(wordFilter, anchorDetector);
-        WebCrawler crawler = new SequentialWebCrawler(processor, indexCreator);
+        //WebCrawler crawler = new SequentialWebCrawler(processor, indexCreator);
+        WebCrawler crawler = new ParallelWebCrawler(processor, indexCreator);
         Set<String> urls = new HashSet<>();
         urls.add("http://www.bimetra.be/");
         try {

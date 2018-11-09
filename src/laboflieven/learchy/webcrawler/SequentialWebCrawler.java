@@ -8,10 +8,13 @@ import laboflieven.learchy.urlprocessing.UrlProcessor;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Set;
+import java.util.logging.Logger;
 
 public class SequentialWebCrawler implements WebCrawler {
     private final UrlProcessor processor;
     private final IndexCreator creator;
+    Logger logger = Logger.getLogger(ParallelWebCrawler.class.getName());
+
 
     public SequentialWebCrawler(final UrlProcessor processor, final IndexCreator creator)
     {
@@ -27,7 +30,7 @@ public class SequentialWebCrawler implements WebCrawler {
         {
             String page = pagesTodo.iterator().next();
             pagesTodo.remove(page);
-            System.out.println("Page: " + page);
+            logger.info("Page: " + page);
 
             if (!visitedPages.contains(page)) {
                 try {
@@ -38,17 +41,16 @@ public class SequentialWebCrawler implements WebCrawler {
                     PageResults results = processor.getFromUrl(new URL(page));
                     pagesTodo.addAll(results.urls);
                     creator.add(page, results.words);
-                    System.out.println(results.words);
+                    logger.info(results.words.toString());
                     sitesDone++;
                 } catch (IOException ioe)
                 {
-                    System.out.println(ioe.getMessage());
-                    System.out.println("Skipped " + page);
-                    //TODO warn.
+                    logger.warning(ioe.getMessage());
+                    logger.info("Skipped " + page);
                 }
                 visitedPages.add(page);
             } else {
-                System.out.println("Skipped " + page + " already processed");
+                logger.info("Skipped " + page + " already processed");
             }
         }
     }
