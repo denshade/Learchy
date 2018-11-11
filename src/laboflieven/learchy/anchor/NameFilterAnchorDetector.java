@@ -16,6 +16,10 @@ public class NameFilterAnchorDetector implements AnchorDetector {
             String href = el.attr("href");
             if(href.contains("twitter") || href.contains("github"))
                 continue;
+            if(href.contains("javascript:"))
+                continue;
+            if(href.contains("tel:"))
+                continue;
             if (href.contains("mailto:"))
             {
                 continue;

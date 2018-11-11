@@ -12,6 +12,7 @@ class RobotsProcessorTest {
     void isHostAllowed() throws IOException {
         RobotsProcessor proc = new RobotsProcessor();
         assertFalse(proc.isHostAllowed("User-agent: *\nDisallow: /no/", "https://laboflieven.org/no/1"));
+        assertTrue(proc.isHostAllowed("User-agent: Blubber\nDisallow: /no/", "https://laboflieven.org/no/1"));
         assertTrue(proc.isHostAllowed("", "anything"));
         assertTrue(proc.isHostAllowed("User-agent: *\nDisallow: /modules", "https://laboflieven.org/yes"));
         assertTrue(proc.isHostAllowed("User-agent: *\nAllow: /yes", "https://laboflieven.org/yes"));

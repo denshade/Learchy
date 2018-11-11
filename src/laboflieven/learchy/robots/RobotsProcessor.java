@@ -26,19 +26,24 @@ public class RobotsProcessor
         String bestDisallowRule = "";
         URL url = new URL(candidateURL);
         candidateURL = url.getPath();
+        String currentUserAgent = "";
         for (String keyVals : robotsContent.split("\n"))
         {
             if (keyVals.startsWith("#")) continue;//skip comments
             if (!keyVals.contains(":")) continue; //if it isn't a key rule then skip it all together.
             String key =  keyVals.substring(0, keyVals.indexOf(":"));
             String rule =  keyVals.substring(keyVals.indexOf(":") + 1).trim();
+            if (key.equals("User-agent")) {
+                currentUserAgent = rule.trim();
+            }
             if (rule.endsWith("/")) rule += "*";
-            if ("Disallow".equals(key)) {
+            boolean isCurrentAgent = currentUserAgent.equals("*") || currentUserAgent.equals("");
+            if ("Disallow".equals(key) && isCurrentAgent) {
                 if (candidateURL.equals(rule) || matches(rule, candidateURL) && bestDisallowRule.length() < rule.length()) {
                     bestDisallowRule = rule;
                 };
             }
-            if ("Allow".equals(key)) {
+            if ("Allow".equals(key)  && isCurrentAgent) {
                 if (candidateURL.equals(rule) || matches(rule, candidateURL) && bestAllowRule.length() < rule.length())  {
                     bestAllowRule = rule;
                 }

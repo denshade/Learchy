@@ -6,9 +6,12 @@ import laboflieven.learchy.contentfilter.FrequentWordFilter;
 import laboflieven.learchy.contentfilter.WordFilter;
 import laboflieven.learchy.index.CSVIndexCreator;
 import laboflieven.learchy.index.IndexCreator;
+import laboflieven.learchy.index.NullIndexCreator;
+import laboflieven.learchy.urlprocessing.AnchorJsoupUrlProcessor;
 import laboflieven.learchy.urlprocessing.JsoupUrlProcessor;
 import laboflieven.learchy.urlprocessing.UrlProcessor;
 import laboflieven.learchy.webcrawler.ParallelWebCrawler;
+import laboflieven.learchy.webcrawler.PoliteSequentialWebCrawler;
 import laboflieven.learchy.webcrawler.SequentialWebCrawler;
 import laboflieven.learchy.webcrawler.WebCrawler;
 
@@ -20,14 +23,17 @@ import java.util.Set;
 public class Learchy
 {
     public static void main(String[] args) throws IOException {
-        IndexCreator indexCreator = new CSVIndexCreator(new File("c:\\tmp\\files.csv"));
+        IndexCreator indexCreator = new NullIndexCreator();
         WordFilter wordFilter = new FrequentWordFilter();
         AnchorDetector anchorDetector = new NameFilterAnchorDetector();
-        UrlProcessor processor = new JsoupUrlProcessor(wordFilter, anchorDetector);
+        UrlProcessor processor = new AnchorJsoupUrlProcessor(wordFilter, anchorDetector);
         //WebCrawler crawler = new SequentialWebCrawler(processor, indexCreator);
+        //WebCrawler crawler = new PoliteSequentialWebCrawler(processor, indexCreator);
         WebCrawler crawler = new ParallelWebCrawler(processor, indexCreator);
+
         Set<String> urls = new HashSet<>();
-        urls.add("http://www.bimetra.be/");
+        urls.add("http://www.bimetra.be");
+        //urls.add("http://corporate.wwe.com/news/2006/2006_05_25_02.jsp");
         try {
             crawler.crawl(urls, new HashSet<>());
         } catch (IOException e) {
