@@ -18,11 +18,13 @@ public class ParallelWebCrawler implements WebCrawler {
     private final UrlProcessor processor;
     private final IndexCreator creator;
     Logger logger = Logger.getLogger(ParallelWebCrawler.class.getName());
+    private int maxIterations;
 
-    public ParallelWebCrawler(final UrlProcessor processor, final IndexCreator creator)
+    public ParallelWebCrawler(final UrlProcessor processor, final IndexCreator creator, int maxIterations)
     {
         this.processor = processor;
         this.creator = creator;
+        this.maxIterations = maxIterations;
     }
 
     @Override
@@ -30,14 +32,15 @@ public class ParallelWebCrawler implements WebCrawler {
         RobotsProcessor robotsProc = new RobotsProcessor();
         long sitesDone = 0;
         List<String> badSites = new ArrayList<>();
-        while (pagesTodo.size()>0 && sitesDone < 1000)
+        maxIterations = 10000;
+        while (pagesTodo.size()>0 && sitesDone < maxIterations)
         {
             long startMilis = System.currentTimeMillis();
-            String[] newArray = Arrays.copyOfRange(pagesTodo.toArray(new String[100]), 0, 100);
+            int nrOfElementsInPage = Math.max(100, pagesTodo.size());
+            String[] newArray = Arrays.copyOfRange(pagesTodo.toArray(new String[nrOfElementsInPage]), 0, nrOfElementsInPage);
             List<String> newList = Arrays.asList(newArray);
             pagesTodo.removeAll(newList);
             newList.parallelStream().forEach(page-> {
-                if (page == null) return;
                 logger.info("Page: " + page);
                 if (!visitedPages.contains(page)) {
                     try {
@@ -56,6 +59,9 @@ public class ParallelWebCrawler implements WebCrawler {
                     {
                         logger.warning(ioe.getMessage());
                         logger.info("Skipped " + page);
+                    } catch (Exception exception)
+                    {
+                        logger.severe(exception.getMessage());
                     }
                     visitedPages.add(page);
                 } else {

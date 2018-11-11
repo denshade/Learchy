@@ -28,12 +28,11 @@ public class Learchy
         AnchorDetector anchorDetector = new NameFilterAnchorDetector();
         UrlProcessor processor = new AnchorJsoupUrlProcessor(wordFilter, anchorDetector);
         //WebCrawler crawler = new SequentialWebCrawler(processor, indexCreator);
-        //WebCrawler crawler = new PoliteSequentialWebCrawler(processor, indexCreator);
-        WebCrawler crawler = new ParallelWebCrawler(processor, indexCreator);
+        //WebCrawler crawler = new PoliteSequentialWebCrawler(processor, indexCreator,10000);
+        WebCrawler crawler = new ParallelWebCrawler(processor, indexCreator,10000);
 
         Set<String> urls = new HashSet<>();
         urls.add("http://www.bimetra.be");
-        //urls.add("http://corporate.wwe.com/news/2006/2006_05_25_02.jsp");
         try {
             crawler.crawl(urls, new HashSet<>());
         } catch (IOException e) {

@@ -15,20 +15,22 @@ public class PoliteSequentialWebCrawler implements WebCrawler {
     private final UrlProcessor processor;
     private final IndexCreator creator;
     Logger logger = Logger.getLogger(ParallelWebCrawler.class.getName());
+    int maxIterations = 10000;
 
 
-    public PoliteSequentialWebCrawler(final UrlProcessor processor, final IndexCreator creator)
+    public PoliteSequentialWebCrawler(final UrlProcessor processor, final IndexCreator creator, int maxIterations)
     {
         this.processor = processor;
         this.creator = creator;
+        this.maxIterations = maxIterations;
     }
 
     @Override
-    public void crawl(Set<String> pagesTodo, Set<String> visitedPages) throws IOException {
+    public void crawl(Set<String> pagesTodo, Set<String> visitedPages)  {
         RobotsProcessor robotsProc = new RobotsProcessor();
         long sitesDone = 0;
         long badStatusses = 0;
-        while (pagesTodo.size()>0 && sitesDone < 10000)
+        while (pagesTodo.size()>0 && sitesDone < maxIterations)
         {
             String page = pagesTodo.iterator().next();
             pagesTodo.remove(page);

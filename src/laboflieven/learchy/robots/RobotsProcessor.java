@@ -1,20 +1,33 @@
 package laboflieven.learchy.robots;
 
 
+import laboflieven.learchy.webcrawler.ParallelWebCrawler;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RobotsProcessor
 {
+    public static Map<String, String> robotsCache = new HashMap<>();
     public boolean isHostAllowed(URL host, String candidateURL) throws IOException {
-        URL robotUrl = new URL(host.getProtocol()+ "://" + host.getHost() + "/robots.txt");
+        String hostURL = host.getProtocol() + "://" + host.getHost() + "/robots.txt";
+        if (robotsCache.containsKey(hostURL))
+        {
+            String robots = robotsCache.get(hostURL);
+            return isHostAllowed(robots, candidateURL);
+        }
+        URL robotUrl = new URL(hostURL);
         if (robotUrl.getContent() instanceof InputStream)
         {
             String robots = new String(((InputStream) robotUrl.getContent()).readAllBytes());
+            robotsCache.put(hostURL, robots);
             return isHostAllowed(robots, candidateURL);
         }
         return true;
@@ -55,6 +68,7 @@ public class RobotsProcessor
 
     public boolean matches(final String rule, final String subject)
     {
+
         Pattern regex = Pattern.compile(rule.replaceAll("[*]", ".*"));
         Matcher m = regex.matcher(subject);
         return m.matches();
