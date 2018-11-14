@@ -52,7 +52,7 @@ public class PoliteSequentialWebCrawler implements WebCrawler {
                 {
                     logger.info("Bad status " + hse);
                     badStatusses++;
-                }catch (IOException | InterruptedException ioe)
+                }catch (Exception ioe)
                 {
                     logger.warning(ioe.getMessage());
                     logger.info("Skipped " + page);

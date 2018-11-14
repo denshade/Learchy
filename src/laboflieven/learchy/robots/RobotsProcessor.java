@@ -1,6 +1,7 @@
 package laboflieven.learchy.robots;
 
 
+import laboflieven.learchy.webcrawler.ParallelHostThreadWebCrawler;
 import laboflieven.learchy.webcrawler.ParallelWebCrawler;
 
 import java.io.IOException;
@@ -16,6 +17,8 @@ import java.util.regex.Pattern;
 public class RobotsProcessor
 {
     public static Map<String, String> robotsCache = new HashMap<>();
+    Logger logger = Logger.getLogger(RobotsProcessor.class.getName());
+
     public boolean isHostAllowed(URL host, String candidateURL) throws IOException {
         String hostURL = host.getProtocol() + "://" + host.getHost() + "/robots.txt";
         if (robotsCache.containsKey(hostURL))
@@ -24,11 +27,16 @@ public class RobotsProcessor
             return isHostAllowed(robots, candidateURL);
         }
         URL robotUrl = new URL(hostURL);
-        if (robotUrl.getContent() instanceof InputStream)
+        try {
+            if (robotUrl.getContent() instanceof InputStream)
+            {
+                String robots = new String(((InputStream) robotUrl.getContent()).readAllBytes());
+                robotsCache.put(hostURL, robots);
+                return isHostAllowed(robots, candidateURL);
+            }
+        } catch (Exception e)
         {
-            String robots = new String(((InputStream) robotUrl.getContent()).readAllBytes());
-            robotsCache.put(hostURL, robots);
-            return isHostAllowed(robots, candidateURL);
+            logger.warning(e.getMessage());
         }
         return true;
     }

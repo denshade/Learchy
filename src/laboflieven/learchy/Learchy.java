@@ -10,10 +10,7 @@ import laboflieven.learchy.index.NullIndexCreator;
 import laboflieven.learchy.urlprocessing.AnchorJsoupUrlProcessor;
 import laboflieven.learchy.urlprocessing.JsoupUrlProcessor;
 import laboflieven.learchy.urlprocessing.UrlProcessor;
-import laboflieven.learchy.webcrawler.ParallelWebCrawler;
-import laboflieven.learchy.webcrawler.PoliteSequentialWebCrawler;
-import laboflieven.learchy.webcrawler.SequentialWebCrawler;
-import laboflieven.learchy.webcrawler.WebCrawler;
+import laboflieven.learchy.webcrawler.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,8 +25,9 @@ public class Learchy
         AnchorDetector anchorDetector = new NameFilterAnchorDetector();
         UrlProcessor processor = new AnchorJsoupUrlProcessor(wordFilter, anchorDetector);
         //WebCrawler crawler = new SequentialWebCrawler(processor, indexCreator);
-        //WebCrawler crawler = new PoliteSequentialWebCrawler(processor, indexCreator,10000);
-        WebCrawler crawler = new ParallelWebCrawler(processor, indexCreator,10000);
+        //WebCrawler crawler = new PoliteSequentialWebCrawler(processor, indexCreator,1000000);
+        //WebCrawler crawler = new ParallelWebCrawler(processor, indexCreator,10000);
+        WebCrawler crawler = new ParallelHostThreadWebCrawler(processor, indexCreator,10000);
 
         Set<String> urls = new HashSet<>();
         urls.add("http://www.bimetra.be");
