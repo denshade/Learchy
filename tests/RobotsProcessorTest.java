@@ -1,5 +1,4 @@
-package laboflieven.learchy.robots;
-
+import laboflieven.learchy.robots.RobotsProcessor;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

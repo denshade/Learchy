@@ -24,7 +24,7 @@ public class AnchorJsoupUrlProcessor implements UrlProcessor {
 
     @Override
     public PageResults getFromUrl(URL source) throws IOException {
-        Document document = Jsoup.connect(source.toString()).get();
+        Document document = Jsoup.connect(source.toString()).timeout(10000).get();
         PageResults results = new PageResults();
         results.urls = new HashSet<>();
         anchorDetector.getAnchors(source, results, document);

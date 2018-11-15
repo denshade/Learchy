@@ -6,24 +6,48 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 public class NameFilterAnchorDetector implements AnchorDetector {
+
+    private List<String> toSkip;
+
+    public static String[] TYPICALSKIP = new String[]{
+            "twitter",
+            "github",
+            "javascript:",
+            "tel:",
+            "mailto:"
+    };
+
+    public NameFilterAnchorDetector()
+    {
+        this.toSkip = Arrays.asList(NameFilterAnchorDetector.TYPICALSKIP);
+    }
+
+    public NameFilterAnchorDetector(List<String> toSkip)
+    {
+        this.toSkip = toSkip;
+    }
+
+
+
     @Override
     public void getAnchors(URL source, PageResults results, Document doc) {
         String baseUrl = source.getProtocol()+"://"+source.getHost();
-        for (Element el : doc.getElementsByTag("a"))
+        here : for (Element el : doc.getElementsByTag("a"))
         {
             String href = el.attr("href");
-            if(href.contains("twitter") || href.contains("github"))
-                continue;
-            if(href.contains("javascript:"))
-                continue;
-            if(href.contains("tel:"))
-                continue;
-            if (href.contains("mailto:"))
+            for (String skippable : toSkip)
             {
-                continue;
+                if (href.contains(skippable))
+                {
+                    continue here;
+                }
             }
+
             if (href.contains("?"))
             {
                 continue;

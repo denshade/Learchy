@@ -1,9 +1,9 @@
-package laboflieven.learchy.webcrawler;
-
 import laboflieven.learchy.anchor.NameFilterAnchorDetector;
 import laboflieven.learchy.contentfilter.FrequentWordFilter;
 import laboflieven.learchy.index.NullIndexCreator;
 import laboflieven.learchy.urlprocessing.JsoupUrlProcessor;
+import laboflieven.learchy.webcrawler.SequentialWebCrawler;
+import laboflieven.learchy.webcrawler.WebCrawler;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -15,7 +15,7 @@ class WebCrawlerTest {
     void crawl() throws MalformedURLException {
         WebCrawler crawler = new SequentialWebCrawler(new JsoupUrlProcessor(new FrequentWordFilter(), new NameFilterAnchorDetector()), new NullIndexCreator());
         Set<String> urls = new HashSet<>();
-        urls.add("http://www.bimetra.be/");
+        urls.add("http://www.e-try.com/black.htm");
         try {
             crawler.crawl(urls, new HashSet<>());
         } catch (IOException e) {

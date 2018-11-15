@@ -38,14 +38,15 @@ public class HostThread extends Thread
         try {
         while(nextUrl != null) {
             if (!visitedPages.contains(nextUrl)) {
-                logger.info("Loading " + nextUrl);
+                logger.info("Loading " + nextUrl + " " + visitedPages.size());
                 visitedPages.add(nextUrl);
-                if (!robotsProc.isHostAllowed(new URL(nextUrl), nextUrl)) {
-                    continue;
-                }
+
                 Thread.sleep(1000);
                 PageResults results = processor.getFromUrl(new URL(nextUrl));
                 for (String scannedResults : results.urls) {
+                    if (!robotsProc.isHostAllowed(new URL(scannedResults), scannedResults)) {
+                        continue;
+                    }
                     URL scanned = new URL(scannedResults);
                     visitMap.addUrl(scanned);
                 }

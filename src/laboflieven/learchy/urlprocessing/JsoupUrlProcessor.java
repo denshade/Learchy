@@ -23,19 +23,13 @@ public class JsoupUrlProcessor implements UrlProcessor {
 
     @Override
     public PageResults getFromUrl(URL source) throws IOException {
-        if (!(source.getContent() instanceof InputStream))
-        {
-            return new PageResults();
-        }
-        InputStream inputStream = ((InputStream)source.getContent());
-        String html = new String(inputStream.readAllBytes(), "UTF8");
+        Document document = Jsoup.connect(source.toString()).timeout(10000).get();
         PageResults results = new PageResults();
         results.urls = new HashSet<>();
-        Document doc = Jsoup.parse(html);
-        anchorDetector.getAnchors(source, results, doc);
-        if (doc.body() == null)
+        anchorDetector.getAnchors(source, results, document);
+        if (document.body() == null)
             return results;//Problem with pages with frames.
-        String text = doc.body().text(); // "An example link"
+        String text = document.body().text(); // "An example link"
         StringTokenizer tokenizer = new StringTokenizer(text, " \t\n\r\f,;_=!:<>/'\"()?[].");
         while(tokenizer.hasMoreTokens()) {
             String word = tokenizer.nextToken().toLowerCase();
