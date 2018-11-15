@@ -32,7 +32,7 @@ public class RobotsProcessor
             }
         } catch (Exception e)
         {
-            logger.warning(e.getMessage());
+            //logger.warning(e.getMessage()); //most of the time 404s
         }
         return true;
     }
@@ -72,9 +72,15 @@ public class RobotsProcessor
 
     public boolean matches(final String rule, final String subject)
     {
+        try{
+            Pattern regex = Pattern.compile(rule.replaceAll("[*]", ".*"));
+            Matcher m = regex.matcher(subject);
+            return m.matches();
+        } catch (Exception e)
+        {
+            logger.info(subject + " " + rule + " " + e );
+            return false;
+        }
 
-        Pattern regex = Pattern.compile(rule.replaceAll("[*]", ".*"));
-        Matcher m = regex.matcher(subject);
-        return m.matches();
     }
 }

@@ -39,7 +39,7 @@ public class NameFilterAnchorDetector implements AnchorDetector {
         String baseUrl = source.getProtocol()+"://"+source.getHost();
         here : for (Element el : doc.getElementsByTag("a"))
         {
-            String href = el.attr("href");
+            String href = el.attr("href").toLowerCase();
             for (String skippable : toSkip)
             {
                 if (href.contains(skippable))
@@ -53,7 +53,8 @@ public class NameFilterAnchorDetector implements AnchorDetector {
                 continue;
             }
             if (href.endsWith(".pdf") || href.endsWith(".docx") || href.endsWith(".png")
-                     || href.endsWith(".jpg"))
+                     || href.endsWith(".jpg") || href.endsWith("doc") || href.endsWith("gif") || href.endsWith("ppt") || href.endsWith("pptx")
+            || href.endsWith(".zip") )
             {
                 continue;
             }

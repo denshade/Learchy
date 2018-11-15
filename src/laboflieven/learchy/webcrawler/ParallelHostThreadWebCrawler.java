@@ -18,16 +18,19 @@ public class ParallelHostThreadWebCrawler implements WebCrawler {
 
     Logger logger = Logger.getLogger(ParallelHostThreadWebCrawler.class.getName());
     private int maxIterations;
+    private final int maxThreads;
 
-    public ParallelHostThreadWebCrawler(final UrlProcessor processor, final IndexCreator creator, int maxIterations)
+    public ParallelHostThreadWebCrawler(final UrlProcessor processor, final IndexCreator creator, int maxIterations, int maxThreads)
     {
         this.processor = processor;
         this.creator = creator;
         this.maxIterations = maxIterations;
+        this.maxThreads = maxThreads;
     }
 
     @Override
     public void crawl(Set<String> pagesTodo, Set<String> visitedPages) throws IOException {
+        long start = System.currentTimeMillis();
         ToVisitPagesForHost visitMap = new ToVisitPagesForHost();
         for (String pageTodo : pagesTodo)
         {
@@ -40,16 +43,21 @@ public class ParallelHostThreadWebCrawler implements WebCrawler {
             thread.start();
             threads.put(host, thread);
         }
-        boolean hasThreadsRunning = true;
-        while(hasThreadsRunning)
+        int nrThreadsRunning = 1;
+        while(nrThreadsRunning > 0 )
         {
             for (String host : visitMap.getHostsWithValues())
             {
-                if (!(threads.keySet().contains(host) && threads.get(host).isAlive()))
+                if (host.endsWith(".com"))
                 {
-                    HostThread thread = new HostThread(processor, creator, host, visitedPages, visitMap);
-                    thread.start();
-                    threads.put(host, thread);
+                    visitMap.removeHost(host);
+                }else {
+                    if (!(threads.keySet().contains(host) && threads.get(host).isAlive()) && getNrThreadsRunning() < maxThreads)
+                    {
+                        HostThread thread = new HostThread(processor, creator, host, visitedPages, visitMap);
+                        thread.start();
+                        threads.put(host, thread);
+                    }
                 }
             }
             //start threads if you can.
@@ -59,15 +67,22 @@ public class ParallelHostThreadWebCrawler implements WebCrawler {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            hasThreadsRunning = false;
-            for (String host : threads.keySet() )
-            {
-                if (threads.get(host).isAlive())
-                {
-                    hasThreadsRunning = true;
-                }
-            }
+            nrThreadsRunning = getNrThreadsRunning();
+            logger.info("Got " + nrThreadsRunning + " with " + visitedPages.size() + " in " + (System.currentTimeMillis() - start)/1000);
         }
 
+    }
+
+    private int getNrThreadsRunning() {
+        int nrThreadsRunning;
+        nrThreadsRunning = 0;
+        for (String host : threads.keySet() )
+        {
+            if (threads.get(host).isAlive())
+            {
+                nrThreadsRunning++;
+            }
+        }
+        return nrThreadsRunning;
     }
 }

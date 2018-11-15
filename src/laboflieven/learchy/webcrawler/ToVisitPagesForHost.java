@@ -45,4 +45,7 @@ public class ToVisitPagesForHost
         return hostsWithValues;
     }
 
+    public void removeHost(String host) {
+        hostVisitPages.remove(host);
+    }
 }
