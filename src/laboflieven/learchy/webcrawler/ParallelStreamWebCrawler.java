@@ -14,13 +14,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
-public class ParallelWebCrawler implements WebCrawler {
+public class ParallelStreamWebCrawler implements WebCrawler {
     private final UrlProcessor processor;
     private final IndexCreator creator;
-    Logger logger = Logger.getLogger(ParallelWebCrawler.class.getName());
+    Logger logger = Logger.getLogger(ParallelStreamWebCrawler.class.getName());
     private int maxIterations;
 
-    public ParallelWebCrawler(final UrlProcessor processor, final IndexCreator creator, int maxIterations)
+    public ParallelStreamWebCrawler(final UrlProcessor processor, final IndexCreator creator, int maxIterations)
     {
         this.processor = processor;
         this.creator = creator;

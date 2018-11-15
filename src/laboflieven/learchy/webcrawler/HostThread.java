@@ -4,7 +4,6 @@ import laboflieven.learchy.index.IndexCreator;
 import laboflieven.learchy.robots.RobotsProcessor;
 import laboflieven.learchy.urlprocessing.PageResults;
 import laboflieven.learchy.urlprocessing.UrlProcessor;
-import org.jsoup.HttpStatusException;
 
 import java.io.IOException;
 import java.net.URL;

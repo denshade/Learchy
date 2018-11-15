@@ -6,7 +6,6 @@ import laboflieven.learchy.urlprocessing.PageResults;
 import laboflieven.learchy.urlprocessing.UrlProcessor;
 import org.jsoup.HttpStatusException;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -14,7 +13,7 @@ import java.util.logging.Logger;
 public class PoliteSequentialWebCrawler implements WebCrawler {
     private final UrlProcessor processor;
     private final IndexCreator creator;
-    Logger logger = Logger.getLogger(ParallelWebCrawler.class.getName());
+    Logger logger = Logger.getLogger(ParallelStreamWebCrawler.class.getName());
     int maxIterations = 10000;
 
 

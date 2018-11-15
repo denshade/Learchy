@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 public class SequentialWebCrawler implements WebCrawler {
     private final UrlProcessor processor;
     private final IndexCreator creator;
-    Logger logger = Logger.getLogger(ParallelWebCrawler.class.getName());
+    Logger logger = Logger.getLogger(ParallelStreamWebCrawler.class.getName());
 
 
     public SequentialWebCrawler(final UrlProcessor processor, final IndexCreator creator)
