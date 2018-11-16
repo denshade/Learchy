@@ -29,6 +29,7 @@ public class ParallelHostThreadWebCrawler implements WebCrawler {
     @Override
     public void crawl(Set<String> pagesTodo, Set<String> visitedPages) throws IOException {
         ToVisitPagesForHost visitMap = new ToVisitPagesForHost();
+        Long errors = 0L;
         for (String pageTodo : pagesTodo)
         {
             visitMap.addUrl(new URL(pageTodo));
@@ -36,7 +37,7 @@ public class ParallelHostThreadWebCrawler implements WebCrawler {
 
         for (String host : visitMap.getHosts())
         {
-            HostThread thread = new HostThread(processor, creator, host, visitedPages, visitMap);
+            HostThread thread = new HostThread(processor, creator, host, visitedPages, visitMap, errors);
             thread.start();
             threads.put(host, thread);
         }
@@ -47,14 +48,13 @@ public class ParallelHostThreadWebCrawler implements WebCrawler {
             {
                 if (!(threads.keySet().contains(host) && threads.get(host).isAlive()))
                 {
-                    HostThread thread = new HostThread(processor, creator, host, visitedPages, visitMap);
+                    HostThread thread = new HostThread(processor, creator, host, visitedPages, visitMap, errors);
                     thread.start();
                     threads.put(host, thread);
                 }
             }
             //start threads if you can.
             try {
-
                 Thread.sleep(10000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -67,6 +67,7 @@ public class ParallelHostThreadWebCrawler implements WebCrawler {
                     hasThreadsRunning = true;
                 }
             }
+            logger.info("errors: "+ errors + " / " + visitedPages.size());
         }
 
     }
