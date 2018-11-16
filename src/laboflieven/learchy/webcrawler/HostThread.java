@@ -10,8 +10,7 @@ import java.net.URL;
 import java.util.Set;
 import java.util.logging.Logger;
 
-public class HostThread extends Thread
-{
+public class HostThread extends Thread {
     private final UrlProcessor processor;
     private final IndexCreator index;
     private final String host;
@@ -21,8 +20,7 @@ public class HostThread extends Thread
     Logger logger = Logger.getLogger(HostThread.class.getName());
 
 
-    public HostThread(final UrlProcessor processor, final IndexCreator index, String host, Set<String> visitedPages, ToVisitPagesForHost visitMap, Long errors)
-    {
+    public HostThread(final UrlProcessor processor, final IndexCreator index, String host, Set<String> visitedPages, ToVisitPagesForHost visitMap, Long errors) {
         this.processor = processor;
         this.index = index;
         this.host = host;
@@ -31,35 +29,34 @@ public class HostThread extends Thread
         this.errors = errors;
     }
 
-    public void run()
-    {
+    public void run() {
         RobotsProcessor robotsProc = new RobotsProcessor();
-        logger.info("Started running for " + host);
         String nextUrl = visitMap.popNextForHost(host);
-        try {
-        while(nextUrl != null) {
-            if (!visitedPages.contains(nextUrl)) {
-                logger.info("Loading " + nextUrl + " " + visitedPages.size());
-                visitedPages.add(nextUrl);
+        logger.info("Started running for " + host + " " + nextUrl);
+        while (nextUrl != null) {
+            try {
+                if (!visitedPages.contains(nextUrl)) {
+                    visitedPages.add(nextUrl);
 
-                Thread.sleep(1000);
-                PageResults results = processor.getFromUrl(new URL(nextUrl));
-                for (String scannedResults : results.urls) {
-                    if (!robotsProc.isHostAllowed(new URL(scannedResults), scannedResults)) {
-                        continue;
+                    Thread.sleep(500);
+                    PageResults results = processor.getFromUrl(new URL(nextUrl));
+                    for (String scannedResults : results.urls) {
+                        if (!robotsProc.isHostAllowed(new URL(scannedResults), scannedResults)) {
+                            continue;
+                        }
+                        URL scanned = new URL(scannedResults);
+                        visitMap.addUrl(scanned);
                     }
-                    URL scanned = new URL(scannedResults);
-                    visitMap.addUrl(scanned);
+                    index.add(nextUrl, results.words);
                 }
-                index.add(nextUrl, results.words);
+                nextUrl = visitMap.popNextForHost(host);
+            } catch (IOException e) {
+                logger.warning(e.getMessage() + " for " + nextUrl);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
             nextUrl = visitMap.popNextForHost(host);
         }
-        } catch (IOException e) {
-                logger.warning(e.getMessage());
-                errors++;
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        logger.info("FINISHED  for " + host);
     }
 }
