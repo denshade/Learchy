@@ -7,7 +7,7 @@ public class ToVisitPagesForHost
 {
     Map<String, Set<String>> hostVisitPages = new HashMap<>();
 
-    public void addUrl(URL url)
+    public synchronized void addUrl(URL url)
     {
         String host = url.getHost();
         if (!hostVisitPages.containsKey(host))
@@ -18,7 +18,7 @@ public class ToVisitPagesForHost
     }
 
 
-    public String popNextForHost(String host)
+    public synchronized String popNextForHost(String host)
     {
         if (!hostVisitPages.containsKey(host)) return null;
         if (hostVisitPages.get(host).size() == 0) return null;
@@ -27,12 +27,12 @@ public class ToVisitPagesForHost
         return url;
     }
 
-    public Set<String> getHosts()
+    public synchronized Set<String> getHosts()
     {
         return hostVisitPages.keySet();
     }
 
-    public Set<String> getHostsWithValues()
+    public synchronized Set<String> getHostsWithValues()
     {
         Set<String> hostsWithValues = new HashSet<>();
         for (String host : hostVisitPages.keySet())

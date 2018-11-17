@@ -31,7 +31,7 @@ public class Learchy
         WebCrawler crawler = new ParallelHostThreadWebCrawler(processor, indexCreator,10000,20);
 
         Set<String> urls = new HashSet<>();
-        urls.add("http://www.bimetra.be");
+        urls.add("https://en.wikipedia.org/wiki/Main_Page");
         try {
             crawler.crawl(urls, new HashSet<>());
         } catch (IOException e) {

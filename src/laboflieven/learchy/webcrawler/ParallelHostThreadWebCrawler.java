@@ -1,10 +1,7 @@
 package laboflieven.learchy.webcrawler;
 
 import laboflieven.learchy.index.IndexCreator;
-import laboflieven.learchy.robots.RobotsProcessor;
-import laboflieven.learchy.urlprocessing.PageResults;
 import laboflieven.learchy.urlprocessing.UrlProcessor;
-import org.jsoup.HttpStatusException;
 
 import java.io.IOException;
 import java.net.URL;
@@ -32,7 +29,7 @@ public class ParallelHostThreadWebCrawler implements WebCrawler {
     public void crawl(Set<String> pagesTodo, Set<String> visitedPages) throws IOException {
         long start = System.currentTimeMillis();
         ToVisitPagesForHost visitMap = new ToVisitPagesForHost();
-        Long errors = 0L;
+        Set<String> errors = Collections.synchronizedSet(new HashSet<>());
         for (String pageTodo : pagesTodo)
         {
             visitMap.addUrl(new URL(pageTodo));
@@ -53,7 +50,7 @@ public class ParallelHostThreadWebCrawler implements WebCrawler {
                 {
                     visitMap.removeHost(host);
                 }else {
-                    if (!(threads.keySet().contains(host) && threads.get(host).isAlive()) && getNrThreadsRunning(errors, visitedPages) < maxThreads)
+                    if (!(threads.keySet().contains(host) && threads.get(host).isAlive()) && getNrThreadsRunning() < maxThreads)
                     {
                         HostThread thread = new HostThread(processor, creator, host, visitedPages, visitMap, errors);
                         thread.start();
@@ -67,13 +64,13 @@ public class ParallelHostThreadWebCrawler implements WebCrawler {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            nrThreadsRunning = getNrThreadsRunning(errors, visitedPages);
-            logger.info("Got " + nrThreadsRunning + " with " + visitedPages.size() + " in " + (System.currentTimeMillis() - start)/1000);
+            nrThreadsRunning = getNrThreadsRunning();
+            logger.info("Got " + nrThreadsRunning + " with Error/page: " + errors.size() + " / " + visitedPages.size() + " in " + (System.currentTimeMillis() - start)/1000);
         }
 
     }
 
-    private int getNrThreadsRunning(Long errors, Set<String> visitedPages) {
+    private int getNrThreadsRunning() {
         int nrThreadsRunning;
         nrThreadsRunning = 0;
         for (String host : threads.keySet() )
@@ -82,7 +79,6 @@ public class ParallelHostThreadWebCrawler implements WebCrawler {
             {
                 nrThreadsRunning++;
             }
-            logger.info("errors: "+ errors + " / " + visitedPages.size());
         }
         return nrThreadsRunning;
     }

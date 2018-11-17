@@ -16,11 +16,12 @@ public class HostThread extends Thread {
     private final String host;
     private final Set<String> visitedPages;
     private ToVisitPagesForHost visitMap;
-    private Long errors;
+    public Set<String> errors;
     Logger logger = Logger.getLogger(HostThread.class.getName());
 
 
-    public HostThread(final UrlProcessor processor, final IndexCreator index, String host, Set<String> visitedPages, ToVisitPagesForHost visitMap, Long errors) {
+    public HostThread(final UrlProcessor processor, final IndexCreator index, String host,
+                      Set<String> visitedPages, ToVisitPagesForHost visitMap, Set<String> errors) {
         this.processor = processor;
         this.index = index;
         this.host = host;
@@ -51,6 +52,7 @@ public class HostThread extends Thread {
                 }
                 nextUrl = visitMap.popNextForHost(host);
             } catch (IOException e) {
+                errors.add(nextUrl);
                 logger.warning(e.getMessage() + " for " + nextUrl);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -59,4 +61,5 @@ public class HostThread extends Thread {
         }
         logger.info("FINISHED  for " + host);
     }
+
 }
