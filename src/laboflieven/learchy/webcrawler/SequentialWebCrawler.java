@@ -2,8 +2,8 @@ package laboflieven.learchy.webcrawler;
 
 import laboflieven.learchy.index.IndexCreator;
 import laboflieven.learchy.robots.RobotsProcessor;
-import laboflieven.learchy.urlprocessing.PageResults;
-import laboflieven.learchy.urlprocessing.UrlProcessor;
+import laboflieven.learchy.urlprocessing.PageSummary;
+import laboflieven.learchy.urlprocessing.PageSummaryProcessor;
 
 import java.io.IOException;
 import java.net.URL;
@@ -11,12 +11,12 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 public class SequentialWebCrawler implements WebCrawler {
-    private final UrlProcessor processor;
+    private final PageSummaryProcessor processor;
     private final IndexCreator creator;
     Logger logger = Logger.getLogger(ParallelStreamWebCrawler.class.getName());
 
 
-    public SequentialWebCrawler(final UrlProcessor processor, final IndexCreator creator)
+    public SequentialWebCrawler(final PageSummaryProcessor processor, final IndexCreator creator)
     {
         this.processor = processor;
         this.creator = creator;
@@ -38,7 +38,7 @@ public class SequentialWebCrawler implements WebCrawler {
                     {
                         continue;
                     }
-                    PageResults results = processor.getFromUrl(new URL(page));
+                    PageSummary results = processor.getFromUrl(new URL(page));
                     pagesTodo.addAll(results.urls);
                     creator.add(page, results.words);
                     logger.info(results.words.toString());

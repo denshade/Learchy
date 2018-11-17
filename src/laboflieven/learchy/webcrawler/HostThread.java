@@ -2,8 +2,8 @@ package laboflieven.learchy.webcrawler;
 
 import laboflieven.learchy.index.IndexCreator;
 import laboflieven.learchy.robots.RobotsProcessor;
-import laboflieven.learchy.urlprocessing.PageResults;
-import laboflieven.learchy.urlprocessing.UrlProcessor;
+import laboflieven.learchy.urlprocessing.PageSummary;
+import laboflieven.learchy.urlprocessing.PageSummaryProcessor;
 
 import java.io.IOException;
 import java.net.URL;
@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 public class HostThread extends Thread {
-    private final UrlProcessor processor;
+    private final PageSummaryProcessor processor;
     private final IndexCreator index;
     private final String host;
     private final Set<String> visitedPages;
@@ -20,7 +20,7 @@ public class HostThread extends Thread {
     Logger logger = Logger.getLogger(HostThread.class.getName());
 
 
-    public HostThread(final UrlProcessor processor, final IndexCreator index, String host,
+    public HostThread(final PageSummaryProcessor processor, final IndexCreator index, String host,
                       Set<String> visitedPages, ToVisitPagesForHost visitMap, Set<String> errors) {
         this.processor = processor;
         this.index = index;
@@ -40,7 +40,7 @@ public class HostThread extends Thread {
                     visitedPages.add(nextUrl);
 
                     Thread.sleep(500);
-                    PageResults results = processor.getFromUrl(new URL(nextUrl));
+                    PageSummary results = processor.getFromUrl(new URL(nextUrl));
                     for (String scannedResults : results.urls) {
                         if (!robotsProc.isHostAllowed(new URL(scannedResults), scannedResults)) {
                             continue;

@@ -1,7 +1,7 @@
 package laboflieven.learchy.webcrawler;
 
 import laboflieven.learchy.index.IndexCreator;
-import laboflieven.learchy.urlprocessing.UrlProcessor;
+import laboflieven.learchy.urlprocessing.PageSummaryProcessor;
 
 import java.io.IOException;
 import java.net.URL;
@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.logging.Logger;
 
 public class ParallelHostThreadWebCrawler implements WebCrawler {
-    private final UrlProcessor processor;
+    private final PageSummaryProcessor processor;
     private final IndexCreator creator;
     Map<String, Thread> threads = new HashMap<>();
 
@@ -17,7 +17,7 @@ public class ParallelHostThreadWebCrawler implements WebCrawler {
     private int maxIterations;
     private final int maxThreads;
 
-    public ParallelHostThreadWebCrawler(final UrlProcessor processor, final IndexCreator creator, int maxIterations, int maxThreads)
+    public ParallelHostThreadWebCrawler(final PageSummaryProcessor processor, final IndexCreator creator, int maxIterations, int maxThreads)
     {
         this.processor = processor;
         this.creator = creator;

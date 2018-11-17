@@ -1,6 +1,6 @@
 package laboflieven.learchy.anchor;
 
-import laboflieven.learchy.urlprocessing.PageResults;
+import laboflieven.learchy.urlprocessing.PageSummary;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -8,7 +8,6 @@ import org.jsoup.nodes.Element;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 public class NameFilterAnchorDetector implements AnchorDetector {
 
@@ -35,7 +34,7 @@ public class NameFilterAnchorDetector implements AnchorDetector {
 
 
     @Override
-    public void getAnchors(URL source, PageResults results, Document doc) {
+    public void getAnchors(URL source, PageSummary results, Document doc) {
         String baseUrl = source.getProtocol()+"://"+source.getHost();
         here : for (Element el : doc.getElementsByTag("a"))
         {

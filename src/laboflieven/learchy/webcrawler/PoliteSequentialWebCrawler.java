@@ -2,8 +2,8 @@ package laboflieven.learchy.webcrawler;
 
 import laboflieven.learchy.index.IndexCreator;
 import laboflieven.learchy.robots.RobotsProcessor;
-import laboflieven.learchy.urlprocessing.PageResults;
-import laboflieven.learchy.urlprocessing.UrlProcessor;
+import laboflieven.learchy.urlprocessing.PageSummary;
+import laboflieven.learchy.urlprocessing.PageSummaryProcessor;
 import org.jsoup.HttpStatusException;
 
 import java.net.URL;
@@ -11,13 +11,13 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 public class PoliteSequentialWebCrawler implements WebCrawler {
-    private final UrlProcessor processor;
+    private final PageSummaryProcessor processor;
     private final IndexCreator creator;
     Logger logger = Logger.getLogger(ParallelStreamWebCrawler.class.getName());
     int maxIterations = 10000;
 
 
-    public PoliteSequentialWebCrawler(final UrlProcessor processor, final IndexCreator creator, int maxIterations)
+    public PoliteSequentialWebCrawler(final PageSummaryProcessor processor, final IndexCreator creator, int maxIterations)
     {
         this.processor = processor;
         this.creator = creator;
@@ -43,7 +43,7 @@ public class PoliteSequentialWebCrawler implements WebCrawler {
                         continue;
                     }
                     Thread.sleep(1000);
-                    PageResults results = processor.getFromUrl(new URL(page));
+                    PageSummary results = processor.getFromUrl(new URL(page));
                     pagesTodo.addAll(results.urls);
                     creator.add(page, results.words);
                     logger.info(results.words.toString());
