@@ -6,25 +6,24 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.StringTokenizer;
 
-public class JsoupUrlProcessor implements UrlProcessor {
+public class JsoupPageSummaryProcessor implements PageSummaryProcessor {
     private WordFilter wordFilter;
     private final AnchorDetector anchorDetector;
 
-    public JsoupUrlProcessor(WordFilter wordFilter, AnchorDetector anchorDetector)
+    public JsoupPageSummaryProcessor(WordFilter wordFilter, AnchorDetector anchorDetector)
     {
         this.wordFilter = wordFilter;
         this.anchorDetector = anchorDetector;
     }
 
     @Override
-    public PageResults getFromUrl(URL source) throws IOException {
+    public PageSummary getFromUrl(URL source) throws IOException {
         Document document = Jsoup.connect(source.toString()).timeout(10000).get();
-        PageResults results = new PageResults();
+        PageSummary results = new PageSummary();
         results.urls = new HashSet<>();
         anchorDetector.getAnchors(source, results, document);
         if (document.body() == null)
