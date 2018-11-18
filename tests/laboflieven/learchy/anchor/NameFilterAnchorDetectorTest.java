@@ -1,6 +1,6 @@
 package laboflieven.learchy.anchor;
 
-import laboflieven.learchy.urlprocessing.PageResults;
+import laboflieven.learchy.urlprocessing.PageSummary;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,7 @@ class NameFilterAnchorDetectorTest {
     void getAnchors() throws MalformedURLException {
         NameFilterAnchorDetector det = new NameFilterAnchorDetector();
         Document document = Jsoup.parse("<html><a href=\"hello.html\"></a><a href=\"tel:012\"></a></html>");
-        PageResults results = new PageResults();
+        PageSummary results = new PageSummary();
         det.getAnchors(new URL("https://laboflieven.org"), results, document);
         assertTrue(results.urls.contains("https://laboflieven.org/hello.html"));
         assertFalse(results.urls.contains("https://laboflieven.org/tel:012"));

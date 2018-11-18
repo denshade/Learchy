@@ -22,7 +22,7 @@ public class JsoupPageSummaryProcessor implements PageSummaryProcessor {
 
     @Override
     public PageSummary getFromUrl(URL source) throws IOException {
-        Document document = Jsoup.connect(source.toString()).timeout(10000).get();
+        Document document = Jsoup.connect(source.toString()).timeout(0).get();
         PageSummary results = new PageSummary();
         results.urls = new HashSet<>();
         anchorDetector.getAnchors(source, results, document);

@@ -14,8 +14,8 @@ class AnchorJsoupUrlProcessorTest {
 
     @Test
     void getFromUrl() throws IOException {
-        AnchorJsoupUrlProcessor proc = new AnchorJsoupUrlProcessor(new FrequentWordFilter(), new NameFilterAnchorDetector());
-        PageResults results = proc.getFromUrl(new URL("https://www.google.com"));
+        AnchorJsoupPageSummaryProcessor proc = new AnchorJsoupPageSummaryProcessor(new FrequentWordFilter(), new NameFilterAnchorDetector());
+        PageSummary results = proc.getFromUrl(new URL("https://www.google.com"));
         assertNotNull(results.urls);
     }
 }

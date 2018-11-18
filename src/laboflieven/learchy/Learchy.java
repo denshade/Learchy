@@ -24,7 +24,7 @@ public class Learchy
         //WebCrawler crawler = new SequentialWebCrawler(processor, indexCreator);
         //WebCrawler crawler = new PoliteSequentialWebCrawler(processor, indexCreator,1000000);
         //WebCrawler crawler = new ParallelStreamWebCrawler(processor, indexCreator,10000);
-        WebCrawler crawler = new ParallelHostThreadWebCrawler(processor, indexCreator,10000,20);
+        WebCrawler crawler = new ParallelHostThreadWebCrawler(processor, indexCreator,10000,100);
 
         Set<String> urls = new HashSet<>();
         urls.add("https://en.wikipedia.org/wiki/Main_Page");

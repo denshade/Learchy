@@ -71,4 +71,11 @@ class RobotsProcessorTest {
         proc.isHostAllowed(new URL("http://www.google.com"), "http://www.google.com/about");
     }
 
+    @Test
+    void isHostWithDots() throws IOException {
+        RobotsProcessor proc = new RobotsProcessor();
+        assertFalse(proc.matches("/", "www.h-q.com/cd-c"));
+
+    }
+
 }
