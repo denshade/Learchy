@@ -7,6 +7,7 @@ import laboflieven.learchy.urlprocessing.PageSummaryProcessor;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -47,6 +48,8 @@ public class SequentialWebCrawler implements WebCrawler {
                 {
                     logger.warning(ioe.getMessage());
                     logger.info("Skipped " + page);
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
                 visitedPages.add(page);
             } else {

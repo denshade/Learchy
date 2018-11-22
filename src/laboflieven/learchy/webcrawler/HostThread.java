@@ -7,6 +7,7 @@ import laboflieven.learchy.urlprocessing.PageSummaryProcessor;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -55,6 +56,8 @@ public class HostThread extends Thread {
                 errors.add(nextUrl);
                 logger.warning(e.getMessage() + " for " + nextUrl);
             } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
             nextUrl = visitMap.popNextForHost(host);
