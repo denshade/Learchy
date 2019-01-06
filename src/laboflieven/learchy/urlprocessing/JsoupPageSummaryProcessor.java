@@ -1,5 +1,6 @@
 package laboflieven.learchy.urlprocessing;
 
+import laboflieven.learchy.DecentStringTokenizer;
 import laboflieven.learchy.anchor.AnchorDetector;
 import laboflieven.learchy.contentfilter.WordFilter;
 import org.jsoup.Jsoup;
@@ -29,10 +30,7 @@ public class JsoupPageSummaryProcessor implements PageSummaryProcessor {
         if (document.body() == null)
             return results;//Problem with pages with frames.
         String text = document.body().text(); // "An example link"
-        StringTokenizer tokenizer = new StringTokenizer(text, " \t\n\r\f,;_=!:<>/'\"()?[].");
-        while(tokenizer.hasMoreTokens()) {
-            String word = tokenizer.nextToken().toLowerCase();
-
+        for (String word : DecentStringTokenizer.tokenize(text)) {
             if (wordFilter.isWordImportant(word)) {
                 results.words.add(word);
             }
